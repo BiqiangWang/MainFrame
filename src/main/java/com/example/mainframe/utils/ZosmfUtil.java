@@ -1,5 +1,6 @@
 package com.example.mainframe.utils;
 
+import com.example.mainframe.entity.JobInformation;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -55,29 +56,29 @@ public class ZosmfUtil {
      * @param seconds polling for how many seconds
      * @return true if job is ready in giving time, otherwise false
      */
-//    public static boolean isReady(HttpSession session, String path, int seconds) {
-//        Object ZOSMF_JSESSIONID = session.getAttribute("ZOSMF_JSESSIONID");
-//        Object ZOSMF_LtpaToken2 = session.getAttribute("ZOSMF_LtpaToken2");
-//        Object ZOSMF_Address = session.getAttribute("ZOSMF_Address");
-//
-//        String urlOverHttps = "https://" + ZOSMF_Address.toString() + path;
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.TEXT_PLAIN);
-//        headers.add("Cookie", ZOSMF_JSESSIONID.toString() + ";" + ZOSMF_LtpaToken2);
-//        HttpEntity<?> request = new HttpEntity<>(null, headers);
-//
-//        for (int i = 0; i < seconds; i++) {
-//            try {
-//                Thread.sleep(1000);// millisecond
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            ResponseEntity<JobInfo> response = new RestTemplate(requestFactory).exchange(urlOverHttps, HttpMethod.GET, request, JobInfo.class);
-//            if (response.getBody() != null && response.getBody().getStatus().equals("OUTPUT")) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
+    public static boolean isReady(HttpSession session, String path, int seconds) {
+        Object ZOSMF_JSESSIONID = session.getAttribute("ZOSMF_JSESSIONID");
+        Object ZOSMF_LtpaToken2 = session.getAttribute("ZOSMF_LtpaToken2");
+        Object ZOSMF_Address = session.getAttribute("ZOSMF_Address");
+
+        String urlOverHttps = "https://" + ZOSMF_Address.toString() + path;
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.add("Cookie", ZOSMF_JSESSIONID.toString() + ";" + ZOSMF_LtpaToken2);
+        HttpEntity<?> request = new HttpEntity<>(null, headers);
+
+        for (int i = 0; i < seconds; i++) {
+            try {
+                Thread.sleep(1000);// millisecond
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ResponseEntity<JobInformation> response = new RestTemplate(requestFactory).exchange(urlOverHttps, HttpMethod.GET, request, JobInformation.class);
+            if (response.getBody() != null && response.getBody().getStatus().equals("OUTPUT")) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
