@@ -18,6 +18,7 @@ public class DatasetServiceImpl implements DatasetService {
 
     private static String datasetApiPath = "/zosmf/restfiles/ds";
 
+    //创建顺序和分区数据集
     @Override
     public boolean createDataset(HttpSession session, DatasetInformation datasetInformation){
         try {
@@ -35,24 +36,7 @@ public class DatasetServiceImpl implements DatasetService {
         return true;
     }
 
-    //获取数据集内容
-    @Override
-    public String getContent(HttpSession session, String datasetName) {
-        String content = "";
-        try {
-            content = ZosmfUtil.go(session, datasetApiPath + "/" + datasetName,
-                    HttpMethod.GET,
-                    null,
-                    null,
-                    String.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return content;
-    }
-
-    //删除数据集
+    //删除数据集 Delete a sequential and partitioned data set
     @Override
     public boolean deleteDataset(HttpSession session, String datasetName) {
         try {
@@ -69,7 +53,24 @@ public class DatasetServiceImpl implements DatasetService {
         return true;
     }
 
-    //获取分区数据集中的成员列表
+    //获取顺序数据集内容 Retrieve the contents of a z/OS data set or member
+    @Override
+    public String getContent(HttpSession session, String datasetName) {
+        String content = "";
+        try {
+            content = ZosmfUtil.go(session, datasetApiPath + "/" + datasetName,
+                    HttpMethod.GET,
+                    null,
+                    null,
+                    String.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return content;
+    }
+
+    //获取分区数据集中的成员列表 List the members of a z/OS data set
     @Override
     @SuppressWarnings("unchecked")
     public List<String> getMemberList(HttpSession session, String datasetName) {
@@ -91,7 +92,7 @@ public class DatasetServiceImpl implements DatasetService {
         return names;
     }
 
-    //查询数据集
+    //查询数据集 List the z/OS data sets on a system
     @Override
     @SuppressWarnings("unchecked")
     public List<Map<String, String>> getDatasetList(HttpSession session, String datasetName) {
