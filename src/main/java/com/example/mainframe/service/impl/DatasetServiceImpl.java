@@ -36,6 +36,22 @@ public class DatasetServiceImpl implements DatasetService {
         return true;
     }
 
+    @Override
+    public boolean writeDataset(HttpSession session, String datasetName, String content){
+        try {
+            ZosmfUtil.go(session,
+                    datasetApiPath + "/" + datasetName,
+                    HttpMethod.PUT,
+                    content,
+                    null,
+                    null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
     //删除数据集 Delete a sequential and partitioned data set
     @Override
     public boolean deleteDataset(HttpSession session, String datasetName) {

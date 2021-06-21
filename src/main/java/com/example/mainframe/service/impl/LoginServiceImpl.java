@@ -14,6 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -21,7 +22,7 @@ import java.util.List;
 public class LoginServiceImpl implements LoginService {
 
     @Override
-    public String login(LoginInformation loginInformation , HttpSession session){
+    public String login(LoginInformation loginInformation , HttpSession session, HttpServletRequest requests){
         try {
             Object ZOSMF_JSESSIONID = session.getAttribute("ZOSMF_JSESSIONID");
             Object ZOSMF_LtpaToken2;
@@ -72,6 +73,11 @@ public class LoginServiceImpl implements LoginService {
             session.setAttribute("ZOSMF_LtpaToken2", ZOSMF_LtpaToken2);
             session.setAttribute("ZOSMF_Address", ZOSMF_Address);
             session.setAttribute("ZOSMF_Account", ZOSMF_Account);
+            System.out.println(session.getAttribute("ZOSMF_JSESSIONID"));
+            System.out.println(session.getAttribute("ZOSMF_LtpaToken2"));
+            System.out.println(session.getAttribute("ZOSMF_Address"));
+            System.out.println(session.getAttribute("ZOSMF_Account"));
+            System.out.println(session.getId());
 
             return "successful";
         } catch (Exception e) {
@@ -102,14 +108,15 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
-    public String islogin(HttpSession session){
+    public String islogin(HttpSession session, HttpServletRequest requests){
         System.out.println(session.getAttribute("ZOSMF_JSESSIONID"));
         System.out.println(session.getAttribute("ZOSMF_LtpaToken2"));
         System.out.println(session.getAttribute("ZOSMF_Address"));
         System.out.println(session.getAttribute("ZOSMF_Account"));
+        System.out.println(session.getId());
 
         if(session.getAttribute("ZOSMF_JSESSIONID")!=null && session.getAttribute("ZOSMF_LtpaToken2")!=null && session.getAttribute("ZOSMF_Address")!=null && session.getAttribute("ZOSMF_Account")!=null)
-            return "islogin";
+            return "Welcome,"+session.getAttribute("ZOSMF_Account");
         else
             return "notlogin";
     }

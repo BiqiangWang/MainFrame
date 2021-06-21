@@ -26,10 +26,20 @@ public class JclController {
     JclService jclService;
 
     @RequestMapping(value = "/submitjcl", method = RequestMethod.POST)
-    public Result submitjcl(HttpSession session, String jcl){
+    public Result submitjcl(HttpSession session){
         if(loginService.notLogin(session)){
             return new Result(true, StatusCode.ERROR,"not login");
         }
+        String jcl="//MGSRT JOB NOTIFY=&SYSUID                                         \n" +
+                "//MERGE EXEC PGM=SORT                                              \n" +
+                "//SYSPRINT DD SYSOUT=*                                             \n" +
+                "//SYSOUT DD SYSOUT=*                                               \n" +
+                "//SORTIN01 DD DSN=ST002.PROJ.DS1,VOL=SER=BYWK00,DISP=SHR,UNIT=3390 \n" +
+                "//SORTIN02 DD DSN=ST002.PROJ.DS2,VOL=SER=BYWK00,DISP=SHR,UNIT=3390 \n" +
+                "//SORTOUT DD DSN=ST002.PROJ.RES,VOL=SER=BYWK00,DISP=SHR,UNIT=3390  \n" +
+                "//SYSIN DD *                                                       \n" +
+                "  MERGE FIELDS=(1,8,CH,A)\n" +
+                "/*\n";
         List<JobOutputInforamtion> jobOutputInforamtions = jclService.submitJcl(session,jcl);
         if(jobOutputInforamtions != null){
             return new Result(true,StatusCode.OK,"submit successfully", jobOutputInforamtions);

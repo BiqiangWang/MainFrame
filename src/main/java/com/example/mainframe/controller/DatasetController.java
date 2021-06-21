@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
+@RestController
+@CrossOrigin
 public class DatasetController {
 
     @Resource
@@ -33,6 +35,17 @@ public class DatasetController {
         return new Result(true, StatusCode.ERROR,"create error");
     }
 
+    @RequestMapping(value = "/writedataset",method = RequestMethod.POST)
+    public Result writeDataset(String datasetname, String content, HttpSession session){
+        if(loginService.notLogin(session)){
+            return new Result(true, StatusCode.ERROR,"not login");
+        }
+        if (datasetService.writeDataset(session,datasetname,content)) {
+            return new Result(true, StatusCode.OK,"write successfully");
+        }
+        return new Result(true, StatusCode.ERROR,"write error");
+    }
+
     //查询数据集内容
     @ApiImplicitParam(paramType = "path", name = "datasetName", value = "数据集名字", required = true, dataType = "String")
     @RequestMapping(value = "/dataset/{datasetName}",method = RequestMethod.GET)
@@ -40,6 +53,19 @@ public class DatasetController {
         if(loginService.notLogin(session)){
             return new Result(true, StatusCode.ERROR,"not login");
         }
+        String content = datasetService.getContent(session , datasetName);
+        if(content == null){
+            return new Result(true, StatusCode.ERROR,"getcontent error");
+        }
+        return new Result(true, StatusCode.OK,"getcontent successfully",content);
+    }
+
+    @RequestMapping(value = "/getresult",method = RequestMethod.GET)
+    public Result getResult(HttpSession session){
+        if(loginService.notLogin(session)){
+            return new Result(true, StatusCode.ERROR,"not login");
+        }
+        String datasetName="ST002.PROJ.RES";
         String content = datasetService.getContent(session , datasetName);
         if(content == null){
             return new Result(true, StatusCode.ERROR,"getcontent error");

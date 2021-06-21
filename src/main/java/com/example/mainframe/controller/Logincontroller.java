@@ -11,22 +11,24 @@ import io.swagger.annotations.ApiOperation;
 
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
 @CrossOrigin
+@RequestMapping(value = "/web")
 public class Logincontroller {
     @Resource
     private LoginService loginService;
 
     @ApiOperation(value = "login",notes = "login",tags = {"LoginController"})
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public Result login(String account, String password, HttpSession session){
+    public Result login(String account, String password, HttpSession session, HttpServletRequest requests){
         if(loginService.notLogin(session)){
             LoginInformation loginInformation = new LoginInformation();
             loginInformation.setAccount(account);
             loginInformation.setPassword(password);
-            String request = loginService.login(loginInformation,session);
+            String request = loginService.login(loginInformation,session,requests);
             if (request.equals("successful")){
                 return new Result(true,StatusCode.OK,"login successfully");
             }
@@ -43,10 +45,10 @@ public class Logincontroller {
     }
 
     @ApiOperation(value = "islogin",notes = "islogin", tags = {"IsloginController"})
-    @RequestMapping(value = "/islogin",method = RequestMethod.DELETE)
-    public Result islogin(HttpSession session){
-        String ans = loginService.islogin(session);
-        return new Result(true,StatusCode.OK,"get login info",ans);
+    @RequestMapping(value = "/islogin",method = RequestMethod.GET)
+    public Result islogin(HttpSession session,HttpServletRequest requests){
+        String ans = loginService.islogin(session,requests);
+        return new Result(true,StatusCode.OK,"check login info",ans);
     }
 
 }

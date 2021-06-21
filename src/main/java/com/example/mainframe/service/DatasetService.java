@@ -10,6 +10,8 @@ public interface DatasetService {
 
     boolean createDataset(HttpSession session, DatasetInformation datasetInformation);
 
+    boolean writeDataset(HttpSession session, String datasetname, String content);
+
     String getContent(HttpSession session, String datasetname);
 
     boolean deleteDataset(HttpSession session, String datasetname);

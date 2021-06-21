@@ -18,9 +18,9 @@ public class JclServiceImpl implements JclService {
     @Override
     public List<JobOutputInforamtion> submitJcl(HttpSession session,String jcl){
         JobInformation jobInformation = ZosmfUtil.go(session, "/zosmf/restjobs/jobs", HttpMethod.PUT, jcl, null, JobInformation.class);
-        if(jobInformation != null && ZosmfUtil.isReady(session,"zosmf/restjobs/jobs/" + jobInformation.getJobName() + "/" + jobInformation.getJobId(),20)){
+        if(jobInformation != null && ZosmfUtil.isReady(session,"/zosmf/restjobs/jobs/" + jobInformation.getJobName() + "/" + jobInformation.getJobId(),20)){
             //获取输出
-            String path = "zosmf/restjobs/jobs/" + jobInformation.getJobName() + "/" + jobInformation.getJobId() + "/file";
+            String path = "/zosmf/restjobs/jobs/" + jobInformation.getJobName() + "/" + jobInformation.getJobId() + "/files";
             @SuppressWarnings("unchecked")
             List<Map<String,Object>> jobOutput = ZosmfUtil.go(session, path, HttpMethod.GET, null, null, List.class);
             List<JobOutputInforamtion> result = new ArrayList<>();
